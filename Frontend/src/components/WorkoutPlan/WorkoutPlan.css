@@ -1,0 +1,80 @@
+.Header{
+    /* display: flex;
+    flex-direction: column; */
+    align-items: center;
+    position: relative;
+    color: var(--orange);
+    font-size: 62px;
+}
+
+.workout-plan {
+    background-color: #333; /* Dark background color */
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .workout-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #444; /* Slightly lighter than the main background */
+    color: white;
+  }
+  
+  .workout-table th,
+  .workout-table td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .workout-table th {
+    background-color: #555; /* Darker color for table header */
+  }
+  
+  .workout-table tr:nth-child(even) {
+    background-color: #333; /* Alternating row color */
+  }
+
+.workout-plan>:nth-child(1){
+  color: white;
+}
+
+.search-form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.dropdown {
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+}
+
+.search-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: orange;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+
+@media screen and (max-width: 768px){
+  .Header{
+    flex-direction: column;
+    font-size: large;
+  }
+  .search-form{
+    flex-direction: column;
+  }
+}

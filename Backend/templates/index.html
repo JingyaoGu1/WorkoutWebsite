@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Workout Plan Generator</title>
+    <style>
+        /* Add your custom CSS styling here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        form {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        select, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Workout Plan Generator</h1>
+    <form id="workoutForm">
+        <label for="equipment_type">Equipment Type:</label>
+        <select id="equipment_type">
+            <!-- Add your exercise type options here -->
+            <option value="Bands">Bands</option>
+            <option value="strength">"Strength Training"</option>
+            <!-- Add more options as needed -->
+        </select>
+        <label for="difficulty_level">Difficulty Level:</label>
+        <select id="difficulty_level">
+            <!-- Add your difficulty level options here -->
+            <option value="Beginner">Beginner</option>
+            <option value="Intermediate">Intermediate</option>
+            <!-- Add more options as needed -->
+        </select>
+        <button type="button" onclick="searchWorkoutPlan()">Search</button>
+    </form>
+    <div id="result">
+        workout plan
+        <!-- Workout plan results will be displayed here -->
+    </div>
+
+    <script>
+        function searchWorkoutPlan() {
+            // Get user inputs
+            var equipmentType = document.getElementById('equipment_type').value;
+            var difficultyLevel = document.getElementById('difficulty_level').value;
+
+            // Create request data
+            var requestData = {
+                "equipment_type": equipmentType,
+                "difficulty_level": difficultyLevel
+            };
+
+            // Send POST request to the API endpoint
+            fetch('/api/workout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Display the workout plan results
+                var resultDiv = document.getElementById('result');
+                resultDiv.innerHTML = '<h2>Your Workout Plan:</h2>' + JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
