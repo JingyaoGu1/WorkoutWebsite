@@ -1,0 +1,64 @@
+/* AIGenerate.css */
+
+.aigenerate-container {
+  background-color: #333; /* Dark background color */
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.header {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.input-container {
+  margin-bottom: 10px;
+}
+
+.input-label {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.input-field,
+.select-field {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  background-color: #444;
+  color: white;
+  border-radius: 5px;
+}
+
+.generate-button {
+  display: block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #ff9900;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+}
+
+.loading-message,
+.error-message {
+  margin-top: 10px;
+}
+
+.generated-exercises {
+  margin-top: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  margin-bottom: 5px;
+}

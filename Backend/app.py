@@ -3,6 +3,7 @@ import pandas as pd
 from flask_cors import CORS  # Import Flask-Cors
 import random
 import pandas as pd
+import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
@@ -13,14 +14,12 @@ from sklearn.preprocessing import OneHotEncoder
 app = Flask(__name__)
 CORS(app) 
 # Read data from the CSV file and preprocess if needed
-df = pd.read_csv('/Users/jingyaogu/Desktop/FitClub-Starter-master/Backend/megaGymDataset.csv')
+df = pd.read_csv('/Users/jingyaogu/Desktop/WorkoutWebsite/Backend/megaGymDataset.csv')
 # df.drop(columns=['Rating', 'RatingDesc'], inplace=True)
 # Preprocessing steps can be done here if required
 
 # Define workout plan generation logic based on user input
 def generate_workout_plan(equipment_type, body_part, difficulty_level):
-
-    
     if equipment_type == "All":
         filtered_df = df[(df['Level'] == difficulty_level) & (df['BodyPart'] == body_part)]
     elif difficulty_level == "All":
@@ -30,28 +29,32 @@ def generate_workout_plan(equipment_type, body_part, difficulty_level):
     else:
         filtered_df = df[(df['Equipment'] == equipment_type) & (df['Level'] == difficulty_level) & (df['BodyPart'] == body_part)]
 
-    
     if filtered_df.empty:
         print("No matching rows in DataFrame.")
         return None
     workout_details_json = filtered_df.to_json(orient='records')
     return workout_details_json
 
-def generateAI():
+def generateAI(age, height, weight, experience_level):
     selected_attributes = ['Type', 'BodyPart', 'Equipment', 'Level', 'Rating']
     workout_features = df[selected_attributes]
 
+    # Combine user input with workout attributes
+    user_attributes = [age, height, weight, experience_level]
+    user_features = np.tile(user_attributes, (len(workout_features), 1))
+    user_features = np.hstack((user_features, workout_features.values))
+
     # Perform one-hot encoding on categorical attributes
     encoder = OneHotEncoder()
-    workout_features_encoded = encoder.fit_transform(workout_features)
+    user_features_encoded = encoder.fit_transform(user_features)
 
     # Standardize features
     scaler = StandardScaler()
-    scaled_features = scaler.fit_transform(workout_features_encoded.toarray())
+    user_features_scaled = scaler.fit_transform(user_features_encoded.toarray())
 
     # Perform PCA for dimensionality reduction
     pca = PCA(n_components=2)
-    reduced_features = pca.fit_transform(scaled_features)
+    reduced_features = pca.fit_transform(user_features_scaled)
 
     # Determine optimal number of clusters using silhouette score
     silhouette_scores = []
@@ -67,7 +70,7 @@ def generateAI():
     cluster_labels = kmeans.fit_predict(reduced_features)
 
     # Recommend workouts based on similarity using Nearest Neighbors
-    nbrs = NearestNeighbors(n_neighbors=3, algorithm='ball_tree').fit(reduced_features)
+    nbrs = NearestNeighbors(n_neighbors=5, algorithm='ball_tree').fit(reduced_features)
     distances, indices = nbrs.kneighbors(reduced_features)
 
     # Generate workout plans based on clusters
@@ -75,13 +78,11 @@ def generateAI():
     for cluster_id in range(optimal_num_clusters):
         similar_workouts = indices[cluster_labels == cluster_id]
         workout_plans[cluster_id] = similar_workouts.flatten().tolist()[:5]
-
-    # print(workout_plans)
     selected_items = []
 
     for key in workout_plans:
-        random_item = workout_plans[key][0]  # Select a random item from each array
-        selected_items.append(random_item)
+        selected_item = workout_plans[key][0]  # Select the first item from each array
+        selected_items.append(selected_item)
 
     res = []
     for i in selected_items:
@@ -102,7 +103,6 @@ def workout_endpoint():
     body_part = data.get('body_part')
     difficulty_level = data.get('difficulty_level')
 
-
     # Backend processing to generate workout plan based on exercise_type and difficulty_level
     workout_plan = generate_workout_plan(equipment_type, body_part, difficulty_level)
 
@@ -111,7 +111,13 @@ def workout_endpoint():
 
 @app.route('/api/AIGenerate', methods=['POST'])
 def AI_endpoint():
-    content = generateAI()
+    data = request.get_json()
+    # Extract user inputs from the request data
+    age = data.get('age')
+    height = data.get('height')
+    weight = data.get('weight')
+    experience_level = data.get('experience_level')
+    content = generateAI(age, height, weight, experience_level)
 
     # Return the generated workout plan as a JSON response
     return jsonify(content)
