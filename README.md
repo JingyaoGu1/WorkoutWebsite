@@ -50,7 +50,13 @@ Remember to listen to your body and adjust the intensity as needed. Stay hydrate
 
 Can we do something similar to this but better? At least we can give it a try. The frontend is practicing REACT for me. I followed along with this Youtube video https://www.youtube.com/watch?v=gpqoZQ8GNK8&t=2387s. The backend is based on the workout dataset from Kaggle https://www.kaggle.com/datasets/drmkgray/workout-data .
 
-### The website has 3 sections. First section is basically visuals displaying website information. Second is a filter and search section where users can select equipment type, difficulty level, and body part from the three drop down menus and the corresponding workouts will be displayed in a table format. Third is an AI powered section to auto generate workouts based on user attributes like age, height, weight and experience level.
+### The website has 3 sections. First section is basically visuals displaying website information. 
+![image](https://github.com/JingyaoGu1/WorkoutWebsite/blob/main/web1.png)
+![image](https://github.com/JingyaoGu1/WorkoutWebsite/blob/main/web2.png)
+![image](https://github.com/JingyaoGu1/WorkoutWebsite/blob/main/web3.png)
+
+### Second is a filter and search section where users can select equipment type, difficulty level, and body part from the three drop down menus and the corresponding workouts will be displayed in a table format. Third is an AI powered section to auto generate workouts based on user attributes like age, height, weight and experience level.
+![image](https://github.com/JingyaoGu1/WorkoutWebsite/blob/main/search.png)
 
 ## Steps for auto generating workouts
 ### 1. Data preprocessinng
