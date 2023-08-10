@@ -54,9 +54,45 @@ Can we do something similar to this but better? At least we can give it a try. T
 
 ## Steps for auto generating workouts
 ### 1. Data preprocessinng
+Filtering out some invalid entries.
 ### 2. Select relevant user and dataset features and combine
+    selected_attributes = ['Type', 'BodyPart', 'Equipment', 'Level', 'Rating']
+    workout_features = df[selected_attributes]
+    user_attributes = [age, height, weight, experience_level]
+    user_features = np.tile(user_attributes, (len(workout_features), 1))
+    user_features = np.hstack((user_features, workout_features.values))
 ### 3. Perform one-hot encoding and standardize features
+    encoder = OneHotEncoder()
+    user_features_encoded = encoder.fit_transform(user_features)
+    scaler = StandardScaler()
+    user_features_scaled = scaler.fit_transform(user_features_encoded.toarray())
 ### 4. Perform PCA for dimensionality reduction
+    pca = PCA(n_components=2)
+    reduced_features = pca.fit_transform(user_features_scaled)
 ### 5. Determine optimal number of clusters using silhouette score
+    silhouette_scores = []
+    for num_clusters in range(2, 10):
+        kmeans = KMeans(n_clusters=num_clusters)
+        cluster_labels = kmeans.fit_predict(reduced_features)
+        silhouette_scores.append(silhouette_score(reduced_features, cluster_labels))
+    optimal_num_clusters = silhouette_scores.index(max(silhouette_scores)) + 4
 ### 6. Perform clustering with optimal number of clusters(KNN)
+    kmeans = KMeans(n_clusters=optimal_num_clusters)
+    cluster_labels = kmeans.fit_predict(reduced_features)
 ### 7. Recommend workouts based on user attributes
+    nbrs = NearestNeighbors(n_neighbors=5, algorithm='ball_tree').fit(reduced_features)
+    distances, indices = nbrs.kneighbors(reduced_features)
+    workout_plans = {}
+    for cluster_id in range(optimal_num_clusters):
+        similar_workouts = indices[cluster_labels == cluster_id]
+        workout_plans[cluster_id] = similar_workouts.flatten().tolist()[:5]
+    selected_items = []
+    for key in workout_plans:
+        selected_item = workout_plans[key][0]  # Select the first item from each array
+        selected_items.append(selected_item)
+    res = []
+    for i in selected_items:
+        res.append(df.iloc[i]['Title'])
+    return res
+ ### Visualization   
+![Alt text](/relative/path/to/img.jpg?raw=true "Optional Title")
