@@ -95,4 +95,7 @@ Filtering out some invalid entries.
         res.append(df.iloc[i]['Title'])
     return res
  ### Visualization   
-![Alt text](/relative/path/to/img.jpg?raw=true "Optional Title")
+ 
+![image](https://github.com/JingyaoGu1/WorkoutWebsite/blob/main/Screenshot%202023-08-10%20at%2011.01.52.png)
+
+In this visualization, the combined features is divided into 5 different clusters. I am randomly choosing 1 from each of the cluster so that the user has the most diverse workout. This can be used together with the previous part where the users can search and select workouts based on their preferences.
